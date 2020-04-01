@@ -42,16 +42,24 @@ module.exports = {
         // tab if you use this network and you must also set the `host`, `port` and `network_id`
         // options below to some value.
         //
-        devNode1: {
-            network_id: "*",
-            host: "quorum.tw-wallet.in2e.com",
-            port: 22000,
-            gasPrice: 0,
-            gas: 4500000
-        },
+        // devNode1: {
+        //     network_id: "*",
+        //     host: "quorum.tw-wallet.in2e.com",
+        //     port: 22000,
+        //     gasPrice: 0,
+        //     gas: 4500000
+        // },
+        // development: {
+        //     host: "127.0.0.1",
+        //     port: 7545,
+        //     network_id: "*",
+        //     gasPrice: 0,
+        //     gas: 4500000
+        // }
+
         development: {
             host: "127.0.0.1",
-            port: 22000,
+            port: 22003,
             network_id: "*",
             gasPrice: 0,
             gas: 4500000
