@@ -25,6 +25,7 @@
     "bn.js": "^5.1.1",
     "cpr": "^3.0.1",
     "dotenv": "^8.2.0",
+    "ethereumjs-tx": "^2.1.2",
     "ethjs": "^0.4.0",
     "ethjs-contract": "^0.2.3",
     "ethjs-query": "^0.3.8",
