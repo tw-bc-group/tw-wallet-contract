@@ -1,11 +1,16 @@
 /**
- * web3 vs ethjs.
- * 由于网上说 ethjs 比 web3 好用，所以比较了一下，发现新版 web3 已经挺好用的，没有必要用 ethjs。
- * ethjs 返回的结果都是 {0:object}, 不好用
+ * web3.js vs ethjs vs ethers.
+ * 由于网上说 ethjs 比 web3 好用，所以比较了一下，发现新版 web3 已经挺好用的，没有必要用 ethjs，ethjs 返回的结果都是 {0:object}, 不好用
+ * ethers 支持 web3.js 目前还不支持的钱包功能，比如：HDWallet
+ * 一些更复杂的功能，应该使用更底层的库实现，比如 MyEtherWallet 中支持用 13/25 个助记词生成钱包，最后一个当密码使用，
+ * web3.js 不支持导入助记词，也可以自己实现。
+ * 结论：可以使用 ethers... 为了保持官方API的及时更新，也可以配合使用 web3.js
  */
 
 // https://github.com/ethjs/examples
 // https://github.com/indutny/bn.js
+// https://docs.ethers.io/ethers.js/html/api-wallet.html#wallet
+// https://web3js.readthedocs.io/en
 
 let contractAddress;
 let net;
@@ -267,11 +272,19 @@ async function importKeyStore() {
 
     console.log("\n--------------web3 : web3.eth.accounts.wallet --------------\n");
     console.log(`web3.eth.accounts.wallet: ${JSON.stringify(decycle(web3.eth.accounts.wallet))}`);
+}
 
+async function createKeyStore() {
+    // account: {"address":"0xeAdB017F94be58c64A067af4eb0D22FB9De4Aa50","privateKey":"0x229009bfbc445d4716846c08f22be0aa69ed92a4306460ef6aeb6a84ec7d3732"}
+    // encryptKeyStore: {"version":3,"id":"38e9555c-34ef-4600-aeea-acb22334c76c","address":"eadb017f94be58c64a067af4eb0d22fb9de4aa50","crypto":{"ciphertext":"87970c9b4639b233018b069e67e584f0afc9b9bb84d923171ed4bcde9c9cdea7","cipherparams":{"iv":"a7257f7e1bc22812424715641dfb60a9"},"cipher":"aes-128-ctr","kdf":"scrypt","kdfparams":{"dklen":32,"salt":"b321d7db716364905cba91e95fae351cdecffb2faac0d2ac9a8756b40ec2a12a","n":8192,"r":8,"p":1},"mac":"292063693d8959fbd3916f6770b025e24af7173d037ef058c297eb30ca9fb93b"}}
+
+    let account = web3.eth.accounts.create(web3.utils.randomHex(32));
+    console.log(`account: ${JSON.stringify(account)}`);
+    let encryptKeyStore = await web3.eth.accounts.encrypt(account.privateKey, "123456789");
+    console.log(`encryptKeyStore: ${JSON.stringify(encryptKeyStore)}`);
 }
 
 async function newAccountByAccountsAPI() {
-
     let account = web3.eth.accounts.create(web3.utils.randomHex(32));
     console.log(`account: ${JSON.stringify(account)}`);
 
@@ -364,6 +377,48 @@ async function getTransactionsByAddr(web3, myAccount, startBlockNumber, endBlock
 
 }
 
+async function mnenomicByEthers() {
+    // https://docs.ethers.io/ethers.js/html/api-wallet.html#wallet
+
+    console.log("\n--------------Ethers : entropyToMnemonic --------------\n");
+
+    const ethers = require('ethers');
+    const mnemonic = await ethers.utils.HDNode.entropyToMnemonic(ethers.utils.randomBytes(16));
+    console.log(`mnemonic：${mnemonic}`);
+    const wallet = ethers.Wallet.fromMnemonic(mnemonic);
+    console.log(`wallet：${JSON.stringify(wallet)}`);
+
+    console.log("\n--------------Ethers : dotenv load mnemonicEnv--------------\n");
+
+    require('dotenv').config({path: "../.env"});
+    const mnemonicEnv = process.env.MNENOMIC;
+    console.log(`mnemonic：${mnemonicEnv}`);
+    const wallet1 = ethers.Wallet.fromMnemonic(mnemonicEnv);
+    console.log(`wallet1：${JSON.stringify(wallet1)}`);
+    // mnemonic：face strategy pottery bottom february draw truck about enrich chunk deposit alley
+    // wallet1：{"signingKey":{"mnemonic":"face strategy pottery bottom february draw truck about enrich chunk deposit alley","path":"m/44'/60'/0'/0/0","privateKey":"0x74b6d2c24584f77c63dda82fb8d5643cd49cd8c562d3940424fca07032440b27","keyPai":{"privateKey":"0x74b6d2c24584f77c63dda82fb8d5643cd49cd8c562d3940424fca07032440b27","publicKey":"0x04198659b6068ab2bb5acca885811ad4d9eb35fea5cef8f04725e2bc90f1b6936827edb900a67260463fb0fc9b04b3c3c22eaa8677fdb032554b014af2f532006f","compressedPublicKey":"0x03198659b6068ab2bb5acca885811ad4d9eb35fea5cef8f04725e2bc90f1b69368","publicKeyBytes":[3,25,134,89,182,6,138,178,187,90,204,168,133,129,26,212,217,235,53,254,165,206,248,240,71,37,226,188,144,241,182,147,104]},"publicKey":"0x04198659b6068ab2bb5acca885811ad4d9eb35fea5cef8f04725e2bc90f1b6936827edb900a67260463fb0fc9b04b3c3c22eaa8677fdb032554b014af2f532006f","address":"0xA97613C3359Cf3E46c93Fd2fCFd1526F2Ab7513B"}}
+
+    console.log("\n--------------Ethers : Load the second account from a mnemonic--------------\n");
+
+    // Load the second account from a mnemonic
+    let path = "m/44'/60'/1'/0/0";
+    let secondMnemonicWallet = ethers.Wallet.fromMnemonic(mnemonic, path);
+    console.log(`secondMnemonicWallet：${JSON.stringify(secondMnemonicWallet)}`);
+
+    console.log("\n--------------Ethers : Load the second account from cn mnemonic--------------\n");
+
+    const mnemonicCn = await ethers.utils.HDNode.entropyToMnemonic(ethers.utils.randomBytes(16), ethers.wordlists.zh_cn);
+    console.log(`mnemonicCn：${JSON.stringify(mnemonicCn)}`);
+
+    // Load using a non-english locale wordlist (the path "null" will use the default)
+    let secondMnemonicWalletNoEn = ethers.Wallet.fromMnemonic(
+        mnemonicCn,
+        path,
+        ethers.wordlists.zh_cn
+    );
+    console.log(`secondMnemonicWalletNoEn：${JSON.stringify(secondMnemonicWalletNoEn)}`);
+
+}
 
 function timeConverter(UNIX_timestamp) {
 
@@ -386,7 +441,7 @@ function timeConverter(UNIX_timestamp) {
  * @returns {Promise<void>}
  */
 async function coinbase() {
-    console.log(`coinbase: ${web3.eth.coinbase},  web3.eth.accounts[0]: ${ web3.eth.accounts[0]}`);
+    console.log(`coinbase: ${web3.eth.coinbase},  web3.eth.accounts[0]: ${web3.eth.accounts[0]}`);
 }
 
 (async function () {
@@ -395,11 +450,13 @@ async function coinbase() {
         // await getTransactionsByAddr(web3, "0x9186eb3d20Cbd1F5f992a950d808C4495153ABd5", 0, 10);
         // await checkConfirmationsByHash("0x9eff6287e55ea56b2abcf8d84a1a151e8a00e0f482ea0ee0448fef9f5d3ebad4");
         // await importKeyStore();
+        // await createKeyStore();
+        await mnenomicByEthers();
         // await newAccountByAccountsAPI();
         // await newAccountByPersonalAPI();
         // await balance();
         // await transfer();
-        await sendSignedTransaction();
+        // await sendSignedTransaction();
     } catch (error) {
         console.log(error.message);
     }
