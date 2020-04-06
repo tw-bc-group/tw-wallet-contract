@@ -19,7 +19,7 @@ let accounts = [
     }
 ];
 
-const selectedAccountIndex = 0;
+const selectedAccountIndex = 1;
 web3 = new Web3(new Web3.providers.HttpProvider(accounts[selectedAccountIndex].url));
 
 
