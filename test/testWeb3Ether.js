@@ -14,13 +14,16 @@
 
 let contractAddress;
 let net;
-env = "dev1";
+env = "ganache";
 if (env === "dev") {
     contractAddress = "0xd9d64b7DC034fAfDbA5DC2902875A67b5d586420";
     net = "http://quorum.tw-wallet.in2e.com:22000";
-} else {
+} else if (env === "local-quorum") {
     contractAddress = "0xc8F717BA9593dc9d45c4518cf444d2cBd08AF24D";
     net = "http://127.0.0.1:22003";
+} else {
+    contractAddress = "0xC48eCD20A2882926CFcc09e03a8f828D0a6EBCDC";
+    net = "http://127.0.0.1:7545";
 }
 
 // 当不知道ABI或者在浏览器简单查看余额的时候,可以用这个
@@ -85,9 +88,9 @@ const balanceABI = [
 ];
 const tokenABI = require("../build/contracts/TWPointERC20.json").abi;
 const bytecode = require("../build/contracts/TWPointERC20.json").bytecode;
-const Web3 = require("web3");
 const multiple = new Web3.utils.BN("1000000000000000000", 10);// use web3.utils.toWei('1', 'ether') instead
 const toAddress = "0xcA843569e3427144cEad5e4d5999a3D0cCF92B8e";
+const Web3 = require("web3");
 const web3 = new Web3(net);
 
 async function ethjs() {
@@ -303,78 +306,29 @@ async function checkConfirmationsByHash(txHash) {
 }
 
 async function getTransactionsByAddr(web3, myAccount, startBlockNumber, endBlockNumber) {
-
-
     if (endBlockNumber == null) {
-
         endBlockNumber = await web3.eth.blockNumber;
-
         console.log("Using endBlockNumber: " + endBlockNumber);
-
     }
-
     if (startBlockNumber == null) {
-
         startBlockNumber = endBlockNumber - 1000;
-
         console.log("Using startBlockNumber: " + startBlockNumber);
-
     }
-
     console.log("Searching for transactions to/from account \"" + myAccount + "\" within blocks " + startBlockNumber + " and " + endBlockNumber);
-
-
     for (let i = startBlockNumber; i <= endBlockNumber; i++) {
-
         if (i % 1000 == 0) {
-
             console.log("Searching block " + i);
-
         }
-
         const block = await web3.eth.getBlock(i, true);
-
         if (block != null && block.transactions != null) {
-
             block.transactions.forEach(function (e) {
-
                 if (myAccount == "*" || myAccount == e.from || myAccount == e.to) {
-
-                    console.log(" tx hash : " + e.hash + "\n"
-
-                        + " nonce : " + e.nonce + "\n"
-
-                        + " blockHash : " + e.blockHash + "\n"
-
-                        + " blockNumber : " + e.blockNumber + "\n"
-
-                        + " transactionIndex: " + e.transactionIndex + "\n"
-
-                        + " from : " + e.from + "\n"
-
-                        + " to : " + e.to + "\n"
-
-                        + " value : " + web3.utils.fromWei(e.value.toString()) + "\n"
-
-                        + " time : " + timeConverter(block.timestamp) + " " + new Date(block.timestamp * 1000).toGMTString() + "\n"
-
-                        + " gasPrice : " + e.gasPrice + "\n"
-
-                        + " gas : " + e.gas + "\n"
-
-                        + " input : " + e.input
-
-                        + "--------------------------------------------------------------------------------------------"
-                    );
-
+                    console.log(`transaction : ${JSON.stringify(e, null, 4)}\n`)
+                    // TODO: parse input
                 }
-
             })
-
         }
-
     }
-
 }
 
 async function mnenomicByEthers() {
@@ -447,11 +401,11 @@ async function coinbase() {
 (async function () {
     try {
         // await coinbase();
-        // await getTransactionsByAddr(web3, "0x9186eb3d20Cbd1F5f992a950d808C4495153ABd5", 0, 10);
+        await getTransactionsByAddr(web3, "0xA97613C3359Cf3E46c93Fd2fCFd1526F2Ab7513B", 0, 100);
         // await checkConfirmationsByHash("0x9eff6287e55ea56b2abcf8d84a1a151e8a00e0f482ea0ee0448fef9f5d3ebad4");
         // await importKeyStore();
         // await createKeyStore();
-        await mnenomicByEthers();
+        // await mnenomicByEthers();
         // await newAccountByAccountsAPI();
         // await newAccountByPersonalAPI();
         // await balance();

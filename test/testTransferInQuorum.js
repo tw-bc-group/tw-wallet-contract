@@ -11,6 +11,7 @@ let accounts = [
         address: '0xA97613C3359Cf3E46c93Fd2fCFd1526F2Ab7513B',
         toAddress: '0x5Ead65B2f8E8C9d46E2e8202179f8098305E7379',
         key: '74b6d2c24584f77c63dda82fb8d5643cd49cd8c562d3940424fca07032440b27',
+        toKey: "139F0A7E7676D052EA4024FA731BBE182D7BA9FD60172722899DA5B583F9BE33",
         url: 'http://127.0.0.1:7545',
         contractAddress: "0xC48eCD20A2882926CFcc09e03a8f828D0a6EBCDC",
         gasPrice: 4500000
@@ -20,6 +21,7 @@ let accounts = [
         address: '0xA97613C3359Cf3E46c93Fd2fCFd1526F2Ab7513B',
         toAddress: '0x5Ead65B2f8E8C9d46E2e8202179f8098305E7379',
         key: '74b6d2c24584f77c63dda82fb8d5643cd49cd8c562d3940424fca07032440b27',
+        toKey: "139F0A7E7676D052EA4024FA731BBE182D7BA9FD60172722899DA5B583F9BE33",
         url: 'http://127.0.0.1:22003',
         contractAddress: "0xC48eCD20A2882926CFcc09e03a8f828D0a6EBCDC",
         gasPrice: 0
@@ -35,6 +37,13 @@ async function transfer(contract) {
     const abi = require("../build/contracts/TWPointERC20.json").abi;
     const {contractAddress, toAddress, address: fromAddress} = accounts[selectedAccountIndex];
     const erc20Contract = new web3.eth.Contract(abi, contractAddress, {from: fromAddress});
+
+    await myTransfer(erc20Contract, contractAddress, fromAddress, toAddress, accounts[selectedAccountIndex].key);
+    // 把钱打回去，测试
+    await myTransfer(erc20Contract, contractAddress, toAddress, fromAddress, accounts[selectedAccountIndex].toKey);
+}
+
+async function myTransfer(erc20Contract, contractAddress, fromAddress, toAddress, key) {
     const decimal = await erc20Contract.methods.decimals().call();
     const name = await erc20Contract.methods.name().call();
     const symbol = await erc20Contract.methods.symbol().call();
@@ -59,7 +68,7 @@ async function transfer(contract) {
         gasPrice: gasPriceHex,
         gasLimit: web3.utils.toHex(210000),
         data: data
-    }, accounts[selectedAccountIndex].key);
+    }, key);
     const receipt = await web3.eth.sendSignedTransaction(tx.rawTransaction);
     console.log(`receipt: ${JSON.stringify(receipt.blockHash, null, 4)}`);
 
