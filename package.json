@@ -9,6 +9,7 @@
   "scripts": {
     "start": "npm run build",
     "build": "truffle compile",
+    "repl:dev": "truffle console --network devNode1",
     "deploy:mainnet": "truffle migrate --network mainnet",
     "deploy:ropsten": "truffle migrate --network ropsten",
     "deploy:private": "truffle migrate --network private",
@@ -24,6 +25,7 @@
   "dependencies": {
     "@truffle/hdwallet-provider": "^1.0.34",
     "bn.js": "^5.1.1",
+    "conf": "^6.2.1",
     "cpr": "^3.0.1",
     "dotenv": "^8.2.0",
     "ethereumjs-tx": "^2.1.2",
