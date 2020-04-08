@@ -65,3 +65,18 @@ eth contract:address 0xed9d02e382b34818e88B88a309c7fe71E65f419d --nonce 11
 ```
 eth contract:call -n quorum erc20@0x4D3bfd7821E237fFE84209d8E638f9f309865b87 "balanceOf('0xed9d02e382b34818e88b88a309c7fe71e65f419d')"
 ```
+
+## 使用自研命令行工具
+
+使用方法
+1. 需要在config文件里面配置私钥
+./cli/quorum.js transfer -t 0xcA843569e3427144cEad5e4d5999a3D0cCF92B8e -m 9.9 --config config.local.quorum.js 
+
+2. 只能在node节点有的账号转账，可以设置password
+./cli/quorum.js transferWithPassword -t 0xcA843569e3427144cEad5e4d5999a3D0cCF92B8e -m 9.9 --config config.local.quorum.js 
+
+3. 查看命令基本信息
+./cli/quorum.js
+
+4. 帮助文档
+./cli/quorum.js help transfer 
