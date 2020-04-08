@@ -6,6 +6,9 @@
   "directories": {
     "test": "test"
   },
+  "bin": {
+    "quorum": "cli/quorum.js"
+  },
   "scripts": {
     "start": "npm run build",
     "build": "truffle compile",
