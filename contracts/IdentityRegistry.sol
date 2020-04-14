@@ -11,6 +11,11 @@ contract IdentityRegistry {
     mapping(address => Identity) private identityDirectory;
     mapping(address => bool) private allAddresses;
 
+    modifier _identityNotExists(address ownerAddress) {
+        require(!identityExists(ownerAddress), "The identity already exist.");
+        _;
+    }
+
     modifier _identityExists(address ownerAddress) {
         require(identityExists(ownerAddress), "The identity does not exist.");
         _;
@@ -37,7 +42,7 @@ contract IdentityRegistry {
         );
     }
 
-    function createIdentity(address ownerAddress, string memory did, string memory publicKey, string memory name) public _onlyOwner(ownerAddress) _identityExists(ownerAddress)
+    function createIdentity(address ownerAddress, string memory did, string memory publicKey, string memory name) public _onlyOwner(ownerAddress) _identityNotExists(ownerAddress)
     returns (address _ownerAddress, string memory _did, string memory _publicKey, string memory _name) {
         Identity storage _identity = identityDirectory[ownerAddress];
 
