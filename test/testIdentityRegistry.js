@@ -168,6 +168,7 @@ async function createIdentity() {
     // const gas = await createIdentityMethod.estimateGas({from: userAddress});
     // console.log(gas);
 
+    // necessary parameters for createIdentity method：`address`、`did`、`public key`、`name`
     const createIdentityMethod = identityRegistryContract.methods.createIdentity(userAddress, `DID:TW:${userAddress}`, userAddress, 'node2');
     const data = createIdentityMethod.encodeABI();
     const nonce = await web3.eth.getTransactionCount(userAddress);
