@@ -53,9 +53,8 @@ exports.transfer = async function transfer(web3, contractAddress, fromAddress, f
         gasLimit: web3.utils.toHex(gasLimit),
         data: data
     }, fromAddressPK);
-    const recoverTransaction = web3.eth.accounts.recover(tx.messageHash, tx.v, tx.r, tx.s,true);
+    const recoverTransaction = web3.eth.accounts.recover(tx.messageHash, tx.v, tx.r, tx.s, true);
     console.log(`recoverTransaction: ${recoverTransaction}`);
-    // console.log(`recoverTransaction1: ${recoverTransaction1}`);
 
     const receipt = await web3.eth.sendSignedTransaction(tx.rawTransaction);
     console.log(`receipt: ${JSON.stringify(receipt.blockHash, null, 4)}`);

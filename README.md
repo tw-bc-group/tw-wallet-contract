@@ -9,24 +9,42 @@ eth-cli 是以太坊命令行工具，也可以用于在 quorum 节点上，完�
 
 使用方法
 1. 需要在config文件里面配置私钥
-./cli/quorum.js transfer -t 0xcA843569e3427144cEad5e4d5999a3D0cCF92B8e -m 9.9 --config config.local.quorum.js 
+./cli/index.js transfer -t 0xcA843569e3427144cEad5e4d5999a3D0cCF92B8e -m 9.9 --config config.local.quorum.js 
 
 2. 只能在node节点有的账号转账，可以设置password
-./cli/quorum.js transferWithPassword -t 0xcA843569e3427144cEad5e4d5999a3D0cCF92B8e -m 9.9 --config config.local.quorum.js 
+./cli/index.js transferWithPassword -t 0xcA843569e3427144cEad5e4d5999a3D0cCF92B8e -m 9.9 --config config.local.quorum.js 
 
 3. 查看命令基本信息
-./cli/quorum.js
+./cli/index.js
 
 4. 帮助文档
-./cli/quorum.js help transfer 
+./cli/index.js help transfer 
 
 5. 全局安转 quorum-cli
 ```
 $ npm link
 ->
-${node_path}/bin/quorum -> cli/quorum.js
+${node_path}/bin/quorum -> cli/index.js
 ```
 所以这个时候我们就可以在全局使用 quorum --version 了。
+
+6. decode raw transaction
+./cli/index.js decode --config config.js
+在config.js里面配置raw，如果想要解析data里面的数据，可以配置对应abi。
+
+7. get transaction by hash
+./cli/index.js getTx --config config.js
+在config.js里面配置hash，如果想要解析data里面的数据，可以配置对应abi。
+
+8. get block transactions
+./cli/index.js getBlockTxs --config config.js 
+默认同步100个块
+
+9. txpool, 查看节点缓存情况
+ ./cli/index.js pool -c status --config config.js 
+ ./cli/index.js pool -c content --config config.js 
+ ./cli/index.js pool -c inspect --config config.js 
+可以用 -u 配置远程节点，不适用config里面的url。
 
 ### 安装 eth-cli
 ```

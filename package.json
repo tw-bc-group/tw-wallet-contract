@@ -7,7 +7,7 @@
     "test": "test"
   },
   "bin": {
-    "quorum": "cli/quorum.js"
+    "quorum": "cli/index.js"
   },
   "scripts": {
     "start": "npm run build",
