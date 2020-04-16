@@ -14,7 +14,7 @@
 
 let contractAddress;
 let net;
-env = "ganache";
+env = "local-quorum";
 if (env === "dev") {
     contractAddress = "0xd9d64b7DC034fAfDbA5DC2902875A67b5d586420";
     net = "http://quorum.tw-wallet.in2e.com:22000";
@@ -88,10 +88,10 @@ const balanceABI = [
 ];
 const tokenABI = require("../build/contracts/TWPointERC20.json").abi;
 const bytecode = require("../build/contracts/TWPointERC20.json").bytecode;
-const multiple = new Web3.utils.BN("1000000000000000000", 10);// use web3.utils.toWei('1', 'ether') instead
 const toAddress = "0xcA843569e3427144cEad5e4d5999a3D0cCF92B8e";
 const Web3 = require("web3");
 const web3 = new Web3(net);
+const multiple = new Web3.utils.BN("1000000000000000000", 10);// use web3.utils.toWei('1', 'ether') instead
 
 async function ethjs() {
 
@@ -220,7 +220,11 @@ async function sendSignedTransaction() {
     console.log(`receipt: ${JSON.stringify(receipt)}`);
     await balance();
 }
-
+// eth_sign calculated the signature over keccak256("\x19Ethereum Signed Message:\n" + len(givenMessage) + givenMessage)))
+// this gives context to a signature and prevents signing of transactions.
+function messageHash(msg) {
+    return web3.utils.sha3('\x19Ethereum Signed Message:\n' + msg.length + msg);
+}
 async function newAccountByPersonalAPI() {
     // What's the difference between web3.eth.personal and web3.eth.accounts?
     // https://stackoverflow.com/questions/50083957/what-is-the-difference-between-web3-eth-accounts-create-and-web3-eth-personal-ne
@@ -240,7 +244,7 @@ async function newAccountByPersonalAPI() {
     console.log(`unlock: ${unlock}`);
 
     // web3.eth.personal.signTransaction if do not call unlockAccount
-    let signTransaction = await web3.eth.signTransaction({
+    let tx = {
         nonce: '0x0',
         from: account,
         gasPrice: "0",
@@ -248,18 +252,22 @@ async function newAccountByPersonalAPI() {
         to: toAddress,
         value: "1000000000000000000",
         data: ""
-    }, password);
+    };
+    let signTransaction = await web3.eth.signTransaction(tx, password);
     console.log(`signTransaction use in web3.eth.sendTransaction(): ${JSON.stringify(signTransaction)}`);
+    let recoverTransaction = web3.eth.accounts.recoverTransaction(signTransaction.raw);
+    console.log(`recoverTransaction: ${recoverTransaction}`);
+
 
     // let accountImport = await web3.eth.personal.importRawKey("cd3376bb711cb332ee3fb2ca04c6a8b9f70c316fcdf7a1f44ef4c7999483295e", "password1234")
     // console.log(`accounts: ${JSON.stringify(accountImport)}`);
 
     // already exist
-    let accountImport7Node1 = await web3.eth.personal.geth("4e77046ba3f699e744acb4a89c36a3ea1158a1bd90a076d36675f4c883864377", null);
-    console.log(`accounts: ${JSON.stringify(accountImport7Node1)}`);
-
-    let accounts = await web3.eth.personal.getAccounts();
-    console.log(`accounts: ${JSON.stringify(accounts)}`);
+    // let accountImport7Node1 = await web3.eth.personal.geth("4e77046ba3f699e744acb4a89c36a3ea1158a1bd90a076d36675f4c883864377", null);
+    // console.log(`accounts: ${JSON.stringify(accountImport7Node1)}`);
+    //
+    // let accounts = await web3.eth.personal.getAccounts();
+    // console.log(`accounts: ${JSON.stringify(accounts)}`);
 
     // accounts: "0x86e961c7b74f760fe5df0623f1bbd048c643f653"
     // accounts: ["0xe513915e94a94b075E7A6eeA4C3B400bDbDA64DA","0x0eA054CE3793966d374E5645641F46F3499a54b5","0x84Ff045dd73Ee3694Cdd782dCAa85e10F10F0575","0x7AB1E764aad60e8729f851310527fa84C89b8BcD","0x2c484A4F39D998045747eE3914D6AB78DeA6F687","0xd369d62947DC512cBebdA34a287fa8A9f34Ee6d2","0xb3785E04D392E94854ed3176c06aCc8ACaFc0A8B","0x82b23Ed03762b6481172ba321B8761B641811a63","0xA46097484A912A75d729e3ddAB9918951D17a346","0xC790394aD1F0Ba7ABBFF6Fa08b0EB39489A70507","0x5C6520ae97f10742BC75FB9C37ea962adC89EfaC","0x8f337bF484B2FC75e4B0436645dcC226Ee2AC531","0xc8D0Cb7b1daE5aA3d475ef85DC8Fe6c2705F928c","0x10F8e811da3EFf71c32E2DB93cd6141C2DF04bDc","0x78309641b13bF3c6bCF06F64E13fa149A4a07003","0xbE6c679B12EeDdC25B84570de937ce69e3329c30","0x86e961c7b74f760fe5DF0623f1bBD048c643F653","0x9186eb3d20Cbd1F5f992a950d808C4495153ABd5"]
@@ -401,13 +409,13 @@ async function coinbase() {
 (async function () {
     try {
         // await coinbase();
-        await getTransactionsByAddr(web3, "0xA97613C3359Cf3E46c93Fd2fCFd1526F2Ab7513B", 0, 100);
+        // await getTransactionsByAddr(web3, "0xA97613C3359Cf3E46c93Fd2fCFd1526F2Ab7513B", 0, 100);
         // await checkConfirmationsByHash("0x9eff6287e55ea56b2abcf8d84a1a151e8a00e0f482ea0ee0448fef9f5d3ebad4");
         // await importKeyStore();
         // await createKeyStore();
         // await mnenomicByEthers();
         // await newAccountByAccountsAPI();
-        // await newAccountByPersonalAPI();
+        await newAccountByPersonalAPI();
         // await balance();
         // await transfer();
         // await sendSignedTransaction();
