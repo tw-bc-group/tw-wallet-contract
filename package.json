@@ -27,6 +27,7 @@
   "author": "",
   "dependencies": {
     "@truffle/hdwallet-provider": "^1.0.34",
+    "abi-decoder": "^2.3.0",
     "bn.js": "^5.1.1",
     "conf": "^6.2.1",
     "cpr": "^3.0.1",

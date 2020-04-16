@@ -5,18 +5,19 @@ module.exports = {
     // toAddress: "0x9186eb3d20cbd1f5f992a950d808c4495153abd5",
 
     // weili node
-    // fromAddress: "0xed9d02e382b34818e88B88a309c7fe71E65f419d",
-    // fromAddressPK:"E6181CAAFFFF94A09D7E332FC8DA9884D99902C7874EB74354BDCADF411929F1",
-    // toAddress: "0x849E687Bda2B7E89868646f39BB01AE070ADf3f7",
-    // contractAddress: "0xd9d64b7DC034fAfDbA5DC2902875A67b5d586420",
-    // url: 'http://quorum.tw-wallet.in2e.com:22000',
+
+    fromAddress: "0xed9d02e382b34818e88B88a309c7fe71E65f419d",
+    fromAddressPK:"E6181CAAFFFF94A09D7E332FC8DA9884D99902C7874EB74354BDCADF411929F1",
+    toAddress: "0xcA843569e3427144cEad5e4d5999a3D0cCF92B8e",
+    contractAddress: "0x9d13c6d3afe1721beef56b55d303b09e021e27ab",
+    url: 'http://quorum.tw-wallet.in2e.com:22003',
 
     // my local node
-    fromAddress: "0x9186eb3d20cbd1f5f992a950d808c4495153abd5",
-    fromAddressPK:"794392BA288A24092030BADAADFEE71E3FA55CCEF1D70C708BAF55C07ED538A8",
-    toAddress: "0xcA843569e3427144cEad5e4d5999a3D0cCF92B8e",
-    contractAddress: "0xc8F717BA9593dc9d45c4518cf444d2cBd08AF24D",
-    url: 'http://127.0.0.1:22003',
+    // fromAddress: "0x9186eb3d20cbd1f5f992a950d808c4495153abd5",
+    // fromAddressPK:"794392BA288A24092030BADAADFEE71E3FA55CCEF1D70C708BAF55C07ED538A8",
+    // toAddress: "0xcA843569e3427144cEad5e4d5999a3D0cCF92B8e",
+    // contractAddress: "0xc8F717BA9593dc9d45c4518cf444d2cBd08AF24D",
+    // url: 'http://127.0.0.1:22003',
 
     password: "",
     money: "8.8",
@@ -344,7 +345,7 @@ module.exports = {
             "name": "Approval",
             "type": "event"
         }
-    ],
+    ]
 };
 
 

@@ -49,12 +49,15 @@ exports.transfer = async function transfer(web3, contractAddress, fromAddress, f
         nonce: web3.utils.toHex(nonce),
         to: contractAddress, // note: this is contractAddress, not toAddress
         value: 0,
-        gasPrice:  web3.utils.toHex(gasPrice),
+        gasPrice: web3.utils.toHex(gasPrice),
         gasLimit: web3.utils.toHex(gasLimit),
         data: data
     }, fromAddressPK);
-    const receipt = await web3.eth.sendSignedTransaction(tx.rawTransaction);
+    const recoverTransaction = web3.eth.accounts.recover(tx.messageHash, tx.v, tx.r, tx.s,true);
+    console.log(`recoverTransaction: ${recoverTransaction}`);
+    // console.log(`recoverTransaction1: ${recoverTransaction1}`);
 
+    const receipt = await web3.eth.sendSignedTransaction(tx.rawTransaction);
     console.log(`receipt: ${JSON.stringify(receipt.blockHash, null, 4)}`);
     await balance(erc20Contract, fromAddress);
 };
