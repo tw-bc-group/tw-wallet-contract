@@ -61,6 +61,15 @@ exports.transfer = async function transfer(web3, contractAddress, fromAddress, f
     await balance(erc20Contract, fromAddress);
 };
 
+exports.balanceOf = async function balanceOf(web3, address, contractAddress, abi) {
+    const eth = await web3.eth.getBalance(address);
+    console.log(`eth.getBalance : ${web3.utils.fromWei(eth, "ether")}`);
+    if (contractAddress && abi) {
+        const erc20Contract = new web3.eth.Contract(abi, contractAddress);
+        await balance(erc20Contract, address)
+    }
+}
+
 async function balance(erc20Contract, fromAddress) {
     const decimal = await erc20Contract.methods.decimals().call();
     const name = await erc20Contract.methods.name().call();

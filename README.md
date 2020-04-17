@@ -44,7 +44,14 @@ ${node_path}/bin/quorum -> cli/index.js
  ./cli/index.js pool -c status --config config.js 
  ./cli/index.js pool -c content --config config.js 
  ./cli/index.js pool -c inspect --config config.js 
+
 可以用 -u 配置远程节点，不适用config里面的url。
+
+10. recoverTx，从raw transaction拿到地址，比较发送地址，验证签名
+./cli/index.js recoverTx --config config.js
+
+11. balanceOf, 获取eth或者erc20余额
+./cli/index.js balanceOf --config config.js
 
 ### 安装 eth-cli
 ```

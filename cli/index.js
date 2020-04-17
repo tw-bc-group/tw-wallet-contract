@@ -74,6 +74,14 @@ program
     .description('recover transaction, return address')
     .action(recoverTx);
 
+program
+    .command('balanceOf')
+    .option('-f, --from-address <type>', 'from address')
+    .option('-c, --contract-address <type>', 'contract address')
+    .option('-a, --abi <type>', 'abi')
+    .option('--config <type>', 'config url')
+    .description('balance of address')
+    .action(balanceOf);
 
 program.parse(process.argv);
 
@@ -85,6 +93,26 @@ function readConfig(configName = "config.js") {
         config = require(filePath);
     }
     return config;
+}
+
+async function balanceOf(cmdObj){
+    let {fromAddress,contractAddress, abi, config: configName} = cmdObj;
+    const config = readConfig(configName);
+    if (!fromAddress) {
+        fromAddress = config.fromAddress;
+    }
+    if (!contractAddress) {
+        contractAddress = config.contractAddress;
+    }
+    if (!abi) {
+        abi = config.abi;
+    }
+
+    console.log("\n--------------balanceOf--------------\n");
+    console.log(`balanceOf command called - fromAddress: ${fromAddress}, contractAddress: ${contractAddress}\n`);
+    const Web3 = require("web3");
+    const web3 = new Web3(config.url);
+    await transferUtil.balanceOf(web3, fromAddress, contractAddress, abi)
 }
 
 async function recoverTx(cmdObj) {
