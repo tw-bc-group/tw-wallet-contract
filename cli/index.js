@@ -5,6 +5,7 @@ const program = require('commander');
 const transferUtil = require('./transfer');
 const decodeUtil = require('./decodeTxRaw');
 const txUtil = require('./getTransaction');
+const inspect = require('./inspects');
 
 
 program.version('eth cli 0.0.1');
@@ -82,6 +83,12 @@ program
     .option('--config <type>', 'config url')
     .description('balance of address')
     .action(balanceOf);
+
+program
+  .command('inspect')
+  .option('-k, --privateKey <key>', 'private key')
+  .description('derive private key to public key with address')
+  .action(privateKeyToPublicKey);
 
 program.parse(process.argv);
 
@@ -303,4 +310,10 @@ async function transferWithPassword(cmdObj) {
     console.log(`transfer command called - contractAddress: ${contractAddress}, fromAddress: ${fromAddress}, toAddress: ${toAddress}, money: ${money}`);
 
     await transferUtil.transferByPersonalAccount(web3, contractAddress, fromAddress, toAddress, abi, money, password);
+}
+
+function privateKeyToPublicKey(cmdObj) {
+  let {privateKey: privateKey} = cmdObj;
+
+  console.log(JSON.stringify(inspect.privateKeyToPublicKey(privateKey), null, 4));
 }

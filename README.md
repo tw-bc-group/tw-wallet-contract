@@ -53,6 +53,9 @@ ${node_path}/bin/quorum -> cli/index.js
 11. balanceOf, 获取eth或者erc20余额
 ./cli/index.js balanceOf --config config.js
 
+12. inspect, 派生公钥和地址
+./cli/index.js inspect -k <privateKey> 
+
 ### 安装 eth-cli
 ```
 $ npm install -g eth-cli
