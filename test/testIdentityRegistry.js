@@ -133,8 +133,8 @@ const abi = [
 const contractAddress = '0x11aC39ac7D780a6b9DdfC8687831e25B655884c7';
 const identityRegistryContract = new web3.eth.Contract(abi, contractAddress);
 
-const userAddress = "0xBCF5f18a2A48f21090dB98161C86530C9C3Be656";
-const userAddressPK = "b531596f28eeae3b49834d71b22abeddebc7b8845c8538ad3f75f1b38930cc8c";
+const userAddress = "0xcA843569e3427144cEad5e4d5999a3D0cCF92B8e";
+const userAddressPK = "4762e04d10832808a0aebdaa79c12de54afbe006bfffd228b3abcc494fe986f9";
 
 const IdentityRegistry = new web3.eth.Contract(abi, contractAddress);
 
@@ -145,71 +145,90 @@ function getBalance() {
         });
 }
 
-// async function unlockAccount() {
-// // Signs data using a specific account
-// // Sending your account password over an unsecured HTTP RPC connection is highly unsecure.
-//     let unlock = await web3.eth.personal.unlockAccount('0xed9d02e382b34818e88B88a309c7fe71E65f419d', '', 600);
-//     console.log(`unlock ${userAddress} : ${unlock}`);
-// }
-// unlockAccount();
+async function verifySignatureForMessage(oriMessage, address, pass) {
+    const sha3Data = web3.utils.sha3(oriMessage);
+    const sig = await web3.eth.personal.sign(sha3Data, address, pass);
+    const recAddress = await web3.eth.personal.ecRecover(sha3Data, sig);
+    console.log(`recAddress: ${recAddress}`);
+    console.log(`oriAddress: ${address}`);
+    console.log(recAddress.toLowerCase() === address.toLowerCase());
+    console.log(sig);
+}
 
-// 不在同一个节点上的账户，需要 signTransaction
-// IdentityRegistry.methods.createIdentity(userAddress, `DID:TW:${userAddress}`, userAddress, 'node2')
-//     .send({
-//         from: userAddress,
-//         gas: 3000000
-//     })
-//     .on('transactionHash', function (hash) {
-//         console.log("hash:", hash);
-//     });
-//
+function messageHash(msg) {
+    return web3.utils.sha3('\x19Ethereum Signed Message:\n' + msg.length + msg);
+}
 
 async function createIdentity() {
-    // const gas = await createIdentityMethod.estimateGas({from: userAddress});
-    // console.log(gas);
-
     // necessary parameters for createIdentity method：`address`、`did`、`public key`、`name`
     const createIdentityMethod = identityRegistryContract.methods.createIdentity(userAddress, `DID:TW:${userAddress}`, userAddress, 'node2');
     const data = createIdentityMethod.encodeABI();
+    console.log(`data: ${data}`);
+    const nonce = await web3.eth.getTransactionCount(userAddress);
+    console.log(`nonce: ${nonce}`);
+
+    const estimateGas = await createIdentityMethod.estimateGas({from: userAddress});
+    console.log(`Estimate gas : ${estimateGas}`);
+
+    const originTxMessage = {
+        from: userAddress,
+        nonce: web3.utils.toHex(nonce),
+        gasPrice: 0,
+        gas: 3000000,
+        data: data,
+        // to: contractAddress, // note: this is contractAddress, not toAddress - 可以不加，应该在 data 里是有的
+        // value: "0" // note: it's optional
+    };
+
+    console.log(`web3 version: ${web3.version}`);
+
+    const signedTx = await web3.eth.accounts.signTransaction(originTxMessage, userAddressPK);
+    console.log(`\n\n`);
+    console.log(signedTx); // note: for logging signed transaction raw data
+
+    const recoverAddress = web3.eth.accounts.recoverTransaction(signedTx.rawTransaction);
+    console.log(`\nRecoverAddress: ${recoverAddress}\n`);
+    console.log(`Match? : ${recoverAddress.toLowerCase() === userAddress.toLowerCase()}`);
+
+    const receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
+    console.log(`receipt: ${JSON.stringify(receipt.blockHash, null, 4)}`);
+}
+
+
+async function getIdentity() {
+    const getIdentity = IdentityRegistry.methods.getIdentity(userAddress);
+    const data = getIdentity.encodeABI();
     const nonce = await web3.eth.getTransactionCount(userAddress);
     const tx = await web3.eth.accounts.signTransaction({
+        from: userAddress,
         nonce: web3.utils.toHex(nonce),
-        to: contractAddress, // note: this is contractAddress, not toAddress
         gasPrice: 0,
         gas: 3000000,
         data: data
+        // to: contractAddress, // note: this is contractAddress, not toAddress
     }, userAddressPK);
 
-    const rawSignedTransaction = tx.rawTransaction;
-    console.log(rawSignedTransaction); // note: for logging signed transaction raw data
-
-    // const receipt = await web3.eth.sendSignedTransaction(rawSignedTransaction);
-    // console.log(`receipt: ${JSON.stringify(receipt.blockHash, null, 4)}`);
-}
-
-async function getIdentity() {
-    // const getIdentity = IdentityRegistry.methods.getIdentity(userAddress);
-    // const data = getIdentity.encodeABI();
-    // const nonce = await web3.eth.getTransactionCount(userAddress);
-    // const tx = await web3.eth.accounts.signTransaction({
-    //     nonce: web3.utils.toHex(nonce),
-    //     to: contractAddress, // note: this is contractAddress, not toAddress
-    //     gasPrice: 0,
-    //     gas: 3000000,
-    //     data: data
-    // }, userAddressPK);
-    // const receipt = await web3.eth.sendSignedTransaction(tx.rawTransaction);
-    //
-    // console.log(`receipt: ${JSON.stringify(receipt.blockHash, null, 4)}`);
-    // console.log(`receipt: ${JSON.stringify(receipt, null, 4)}`);
-
-    IdentityRegistry.methods.getIdentity(userAddress)
-        .call(null, (error, result) => {
-            console.log('the data : ' + result);
-            console.log('the data : ' + JSON.stringify(result));
+    await web3.eth.sendSignedTransaction(tx.rawTransaction)
+        .on('transactionHash', function (hash) {
+            console.log(hash);
         });
+    // .on('receipt', function (receipt) {
+    //     console.log(receipt);
+    // })
+    // .on('confirmation', function (confirmationNumber, receipt) {
+    //     console.log(confirmationNumber, receipt);
+    // })
+    // .on('error', console.error);
+
+    // Another way to get identity
+    // IdentityRegistry.methods.getIdentity(userAddress)
+    //     .call(null, (error, result) => {
+    //         console.log('the data : ' + result);
+    //         console.log('the data : ' + JSON.stringify(result));
+    //     });
 }
 
-getBalance();
+// getBalance();
+// verifySignatureForMessage('hello world', userAddress, '');
 createIdentity();
-getIdentity();
+// getIdentity();
