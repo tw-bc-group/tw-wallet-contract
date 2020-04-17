@@ -163,72 +163,53 @@ async function createIdentity() {
     // necessary parameters for createIdentity method：`address`、`did`、`public key`、`name`
     const createIdentityMethod = identityRegistryContract.methods.createIdentity(userAddress, `DID:TW:${userAddress}`, userAddress, 'node2');
     const data = createIdentityMethod.encodeABI();
-    console.log(`data: ${data}`);
     const nonce = await web3.eth.getTransactionCount(userAddress);
-    console.log(`nonce: ${nonce}`);
 
-    const estimateGas = await createIdentityMethod.estimateGas({from: userAddress});
-    console.log(`Estimate gas : ${estimateGas}`);
-
-    const originTxMessage = {
-        from: userAddress,
+    const tx = await web3.eth.accounts.signTransaction({
         nonce: web3.utils.toHex(nonce),
+        to: contractAddress, // note: this is contractAddress, not toAddress
         gasPrice: 0,
         gas: 3000000,
-        data: data,
-        // to: contractAddress, // note: this is contractAddress, not toAddress - 可以不加，应该在 data 里是有的
-        // value: "0" // note: it's optional
-    };
+        data: data
+    }, userAddressPK);
+    const rawSignedTransaction = tx.rawTransaction;
+    console.log(rawSignedTransaction); // note: for logging signed transaction raw data
 
-    console.log(`web3 version: ${web3.version}`);
-
-    const signedTx = await web3.eth.accounts.signTransaction(originTxMessage, userAddressPK);
-    console.log(`\n\n`);
-    console.log(signedTx); // note: for logging signed transaction raw data
-
-    const recoverAddress = web3.eth.accounts.recoverTransaction(signedTx.rawTransaction);
+    // verify transaction signature
+    const recoverAddress = web3.eth.accounts.recoverTransaction(rawSignedTransaction);
     console.log(`\nRecoverAddress: ${recoverAddress}\n`);
     console.log(`Match? : ${recoverAddress.toLowerCase() === userAddress.toLowerCase()}`);
 
-    const receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
+    // send raw signed transaction
+    const receipt = await web3.eth.sendSignedTransaction(rawSignedTransaction);
     console.log(`receipt: ${JSON.stringify(receipt.blockHash, null, 4)}`);
 }
 
 
 async function getIdentity() {
+    // Another way to get identity
     const getIdentity = IdentityRegistry.methods.getIdentity(userAddress);
     const data = getIdentity.encodeABI();
     const nonce = await web3.eth.getTransactionCount(userAddress);
     const tx = await web3.eth.accounts.signTransaction({
-        from: userAddress,
         nonce: web3.utils.toHex(nonce),
+        to: contractAddress, // note: this is contractAddress, not toAddress
         gasPrice: 0,
         gas: 3000000,
         data: data
-        // to: contractAddress, // note: this is contractAddress, not toAddress
     }, userAddressPK);
+    const receipt = await web3.eth.sendSignedTransaction(tx.rawTransaction);
 
-    await web3.eth.sendSignedTransaction(tx.rawTransaction)
-        .on('transactionHash', function (hash) {
-            console.log(hash);
+    console.log(`receipt: ${JSON.stringify(receipt.blockHash, null, 4)}`);
+    console.log(`receipt: ${JSON.stringify(receipt, null, 4)}`);
+
+    IdentityRegistry.methods.getIdentity(userAddress)
+        .call(null, (error, result) => {
+            console.log('the data : ' + JSON.stringify(result));
         });
-    // .on('receipt', function (receipt) {
-    //     console.log(receipt);
-    // })
-    // .on('confirmation', function (confirmationNumber, receipt) {
-    //     console.log(confirmationNumber, receipt);
-    // })
-    // .on('error', console.error);
-
-    // Another way to get identity
-    // IdentityRegistry.methods.getIdentity(userAddress)
-    //     .call(null, (error, result) => {
-    //         console.log('the data : ' + result);
-    //         console.log('the data : ' + JSON.stringify(result));
-    //     });
 }
 
 // getBalance();
 // verifySignatureForMessage('hello world', userAddress, '');
-createIdentity();
-// getIdentity();
+// createIdentity();
+getIdentity();
