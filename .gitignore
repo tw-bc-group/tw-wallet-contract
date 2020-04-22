@@ -5,3 +5,5 @@
 /package-lock.json
 /sampletx.js
 /yarn.lock
+
+.DS_Store

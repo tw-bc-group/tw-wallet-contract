@@ -1,11 +1,11 @@
 async function getTxHash(web3, hash, abi) {
     const receipt = await web3.eth.getTransactionReceipt(hash);
+    console.log(`receipt : ${JSON.stringify(receipt, null, 4)}`);
     if (receipt && receipt.logs) {
         const abiDecoder = require('abi-decoder');
         abiDecoder.addABI(abi);
         const decodedLogs = abiDecoder.decodeLogs(receipt.logs);
         if (decodedLogs && decodedLogs.length > 0) {
-            console.log(`receipt : ${JSON.stringify(receipt, null, 4)}`);
             console.log(`receipt.logs : ${JSON.stringify(decodedLogs, null, 4)}\n`);
         }
     }

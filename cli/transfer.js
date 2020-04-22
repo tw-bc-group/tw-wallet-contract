@@ -57,7 +57,7 @@ exports.transfer = async function transfer(web3, contractAddress, fromAddress, f
     console.log(`recoverTransaction: ${recoverTransaction}`);
 
     const receipt = await web3.eth.sendSignedTransaction(tx.rawTransaction);
-    console.log(`receipt: ${JSON.stringify(receipt.blockHash, null, 4)}`);
+    console.log(`receipt: ${JSON.stringify(receipt, null, 4)}`);
     await balance(erc20Contract, fromAddress);
 };
 
