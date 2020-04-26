@@ -9,7 +9,7 @@ contract TWPointERC20 is ERC20, ERC20Detailed {
     // modify token symbol
     string public constant SYMBOL = "TWP";
     // modify token decimals
-    uint8 public constant DECIMALS = 18;
+    uint8 public constant DECIMALS = 2;
     // modify initial token supply
     uint256 public constant INITIAL_SUPPLY = 10000 * (10 ** uint256(DECIMALS)); // 10000 tokens
 
