@@ -20,7 +20,8 @@ exports.transferByPersonalAccount = async function transfer(web3, contractAddres
     console.log(`unlock ${fromAddress} : ${unlock}`);
 
     // web3.eth.personal.signTransaction if do not call unlockAccount
-    let receipt = await erc20Contract.methods.transfer(toAddress, web3.utils.toWei(money, 'ether')).send({from: fromAddress});
+    const adjustMoney = await CalcMoney(erc20Contract, money);
+    let receipt = await erc20Contract.methods.transfer(toAddress, CalcMoney(erc20Contract, adjustMoney)).send({from: fromAddress});
     console.log(`Receipt: ${JSON.stringify(receipt.blockHash, null, 4)}`);
     await balance(erc20Contract, fromAddress);
 };
@@ -42,8 +43,8 @@ exports.transfer = async function transfer(web3, contractAddress, fromAddress, f
     const erc20Contract = new web3.eth.Contract(abi, contractAddress);
 
     await balance(erc20Contract, fromAddress);
-
-    const data = erc20Contract.methods.transfer(toAddress, web3.utils.toWei(money, 'ether')).encodeABI();
+    const adjustMoney = await CalcMoney(erc20Contract, money);
+    const data = erc20Contract.methods.transfer(toAddress, adjustMoney).encodeABI();
     const nonce = await web3.eth.getTransactionCount(fromAddress);
     const tx = await web3.eth.accounts.signTransaction({
         nonce: web3.utils.toHex(nonce),
@@ -70,6 +71,13 @@ exports.balanceOf = async function balanceOf(web3, address, contractAddress, abi
     }
 }
 
+async function CalcMoney(erc20Contract, value) {
+    const decimal = await erc20Contract.methods.decimals().call();
+    const adjustedValue = value * Math.pow(10, decimal);
+    console.log(`Transfer: decimal:${decimal}, value:${value}, adjustedValue:${adjustedValue}`);
+    return adjustedValue;
+}
+
 async function balance(erc20Contract, fromAddress) {
     const decimal = await erc20Contract.methods.decimals().call();
     const name = await erc20Contract.methods.name().call();
@@ -77,5 +85,5 @@ async function balance(erc20Contract, fromAddress) {
 
     const balance = await erc20Contract.methods.balanceOf(fromAddress).call();
     const adjustedBalance = balance / Math.pow(10, decimal);
-    console.log(`TWPointERC20: name:${name}, symbol:${symbol}, balance:${adjustedBalance}`);
+    console.log(`Transfer: name:${name}, symbol:${symbol}, balance:${adjustedBalance}`);
 }
