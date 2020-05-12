@@ -1,98 +1,10 @@
 const Web3 = require("web3");
 const web3 = new Web3();
-web3.setProvider(new Web3.providers.HttpProvider("http://127.0.0.1:22001"));
+// web3.setProvider(new Web3.providers.HttpProvider("http://127.0.0.1:22001"));
+web3.setProvider(new Web3.providers.HttpProvider("http://quorum.tw-wallet.in2e.com:22001"));
 
-const abi = [
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": true,
-                "name": "claimId",
-                "type": "string"
-            },
-            {
-                "indexed": false,
-                "name": "ownerId",
-                "type": "string"
-            },
-            {
-                "indexed": false,
-                "name": "issuerId",
-                "type": "string"
-            },
-            {
-                "indexed": false,
-                "name": "isRevoke",
-                "type": "bool"
-            }
-        ],
-        "name": "HealthVerificationCreated",
-        "type": "event"
-    },
-    {
-        "constant": false,
-        "inputs": [
-            {
-                "name": "issuer",
-                "type": "address"
-            },
-            {
-                "name": "claimId",
-                "type": "string"
-            },
-            {
-                "name": "ownerId",
-                "type": "string"
-            },
-            {
-                "name": "issuerId",
-                "type": "string"
-            }
-        ],
-        "name": "createHealthVerification",
-        "outputs": [
-            {
-                "name": "_claimId",
-                "type": "string"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "claimId",
-                "type": "string"
-            }
-        ],
-        "name": "getHealthVerification",
-        "outputs": [
-            {
-                "name": "_claimId",
-                "type": "string"
-            },
-            {
-                "name": "_ownerId",
-                "type": "string"
-            },
-            {
-                "name": "_issuerId",
-                "type": "string"
-            },
-            {
-                "name": "_isRevoke",
-                "type": "bool"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    }
-];
+const abi = require("../build/contracts/HealthVerificationClaim.json").abi;
+
 const contractAddress = '0x81845481fD51Efd88fd44e8983a60CEcF3886552';
 const HealthyClaimContract = new web3.eth.Contract(abi, contractAddress);
 
@@ -130,5 +42,5 @@ async function createHealthyClaim(claimId, ownerId) {
 }
 
 
-createHealthyClaim('DID:TW:Ge8wZTMxMynwoBGcLCDpNS3xnssZ3F6374tTqcfa', 'DID:TW:C304A5079E5898B55B6dCAFD5243f1660cc3062A');
-getHealthyClaim('DID:TW:Ge8wZTMxMynwoBGcLCDpNS3xnssZ3F6374tTqcfa');
+// createHealthyClaim('DID:TW:Ge8wZTMxMynwoBGcLCDpNS3xnssZ3F6374tTqcfa', 'DID:TW:C304A5079E5898B55B6dCAFD5243f1660cc3062A');
+getHealthyClaim('DID:TW:8nog6PfJJKtY5GKdfVJvZ3Aw5TKnb9QSz6FALZtp');
