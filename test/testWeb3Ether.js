@@ -220,11 +220,13 @@ async function sendSignedTransaction() {
     console.log(`receipt: ${JSON.stringify(receipt)}`);
     await balance();
 }
+
 // eth_sign calculated the signature over keccak256("\x19Ethereum Signed Message:\n" + len(givenMessage) + givenMessage)))
 // this gives context to a signature and prevents signing of transactions.
 function messageHash(msg) {
     return web3.utils.sha3('\x19Ethereum Signed Message:\n' + msg.length + msg);
 }
+
 async function newAccountByPersonalAPI() {
     // What's the difference between web3.eth.personal and web3.eth.accounts?
     // https://stackoverflow.com/questions/50083957/what-is-the-difference-between-web3-eth-accounts-create-and-web3-eth-personal-ne
@@ -413,9 +415,9 @@ async function coinbase() {
         // await checkConfirmationsByHash("0x9eff6287e55ea56b2abcf8d84a1a151e8a00e0f482ea0ee0448fef9f5d3ebad4");
         // await importKeyStore();
         // await createKeyStore();
-        // await mnenomicByEthers();
+        await mnenomicByEthers();
         // await newAccountByAccountsAPI();
-        await newAccountByPersonalAPI();
+        // await newAccountByPersonalAPI();
         // await balance();
         // await transfer();
         // await sendSignedTransaction();

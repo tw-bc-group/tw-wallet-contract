@@ -43,18 +43,25 @@ module.exports = {
         // options below to some value.
         //
         devNode1: {
-             network_id: "*",
-             host: "quorum.tw-wallet.in2e.com",
-             port: 22000,
-             gasPrice: 0,
-             gas: 4500000
-         },
-        development: {
+            network_id: "*",
+            host: "quorum.tw-wallet.in2e.com",
+            port: 22000,
+            gasPrice: 0,
+            gas: 4500000
+        },
+        developmentPK: {
             network_id: "*",
             gasPrice: 0,
             gas: 4500000,
             provider: () => new HDWalletProvider(mnemonic, `http://127.0.0.1:7545`),
-            from: "0xA97613C3359Cf3E46c93Fd2fCFd1526F2Ab7513B",        // Account to send txs from (default: accounts[0])
+        },
+        development: {
+            network_id: "*",
+            host: "127.0.0.1",
+            port: 7545,
+            gas: 5500000,
+            gasPrice: 20000,
+            from: "0x47187406E7dA648AcF3E6761eFC00660fcd7A0C6",        // Account to send txs from (default: accounts[0])
         },
 
         localQuorum: {
