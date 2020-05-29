@@ -1,13 +1,14 @@
 module.exports = {
     // my local node
-    fromAddress: "0x9186eb3d20cbd1f5f992a950d808c4495153abd5",
+    fromAddress: "0xA97613C3359Cf3E46c93Fd2fCFd1526F2Ab7513B",
+    // fromAddress: "0x9186eb3d20cbd1f5f992a950d808c4495153abd5",
     fromAddressPK:"794392BA288A24092030BADAADFEE71E3FA55CCEF1D70C708BAF55C07ED538A8",
     toAddress: "0xcA843569e3427144cEad5e4d5999a3D0cCF92B8e",
-    contractAddress: "0xc8F717BA9593dc9d45c4518cf444d2cBd08AF24D",
+    contractAddress: "0x238E5EbF7644941d6e8283F420DACcF0125D4057",
     url: 'http://127.0.0.1:7545',
     password: "",
     money: "8.8",
-    abi: [
+    "abi": [
         {
             "constant": true,
             "inputs": [],

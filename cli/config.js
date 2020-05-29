@@ -10,7 +10,7 @@ module.exports = {
     // fromAddressPK:"E6181CAAFFFF94A09D7E332FC8DA9884D99902C7874EB74354BDCADF411929F1",
     // toAddress: "0xcA843569e3427144cEad5e4d5999a3D0cCF92B8e",
     contractAddress: "0x624d400315312c6280F6dB7683ACf2128EbB9d46",
-    url: 'http://quorum.tw-wallet.in2e.com:22003',
+    url: 'http://quorum.tw-wallet.in2e.com:22001',
 
     // my local node
     // fromAddress: "0x9186eb3d20cbd1f5f992a950d808c4495153abd5",
@@ -24,7 +24,7 @@ module.exports = {
 
     password: "",
     money: "8.8",
-    abi: [
+    "abi": [
         {
             "constant": true,
             "inputs": [],
@@ -348,7 +348,7 @@ module.exports = {
             "name": "Approval",
             "type": "event"
         }
-    ]
+    ],
 };
 
 
