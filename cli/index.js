@@ -6,6 +6,7 @@ const transferUtil = require('./transfer');
 const decodeUtil = require('./decodeTxRaw');
 const txUtil = require('./getTransaction');
 const inspect = require('./inspects');
+const keystoreRead = require('./importKeystore');
 
 
 program.version('eth cli 0.0.1');
@@ -85,16 +86,22 @@ program
     .action(balanceOf);
 
 program
-  .command('inspect')
-  .option('-k, --privateKey <key>', 'private key')
-  .description('derive private key to public key with address')
-  .action(privateKeyToPublicKey);
+    .command('inspect')
+    .option('-k, --privateKey <key>', 'private key')
+    .description('derive private key to public key with address')
+    .action(privateKeyToPublicKey);
+
+program
+    .command('keystore')
+    .option('-f, --file <file>', 'file')
+    .description('read keystore')
+    .action(importKeyStore);
 
 program.parse(process.argv);
 
 function readConfig(configName = "config.js") {
     let config = {};
-    const filePath = path.resolve(__dirname, './') + '/' + configName;
+    const filePath = path.normalize(path.resolve(__dirname, './') + '/' + configName);
     console.log(`config path: ${filePath}`);
     if (fs.existsSync(filePath)) {
         config = require(filePath);
@@ -102,8 +109,17 @@ function readConfig(configName = "config.js") {
     return config;
 }
 
-async function balanceOf(cmdObj){
-    let {fromAddress,contractAddress, abi, config: configName} = cmdObj;
+async function importKeyStore(cmdObj) {
+    let {file,config: configName} = cmdObj;
+    const config = readConfig(configName);
+    const filePath = path.normalize(file);
+    const Web3 = require("web3");
+    const web3 = new Web3(config.url);
+    keystoreRead(web3,filePath);
+}
+
+async function balanceOf(cmdObj) {
+    let {fromAddress, contractAddress, abi, config: configName} = cmdObj;
     const config = readConfig(configName);
     if (!fromAddress) {
         fromAddress = config.fromAddress;
@@ -313,7 +329,7 @@ async function transferWithPassword(cmdObj) {
 }
 
 function privateKeyToPublicKey(cmdObj) {
-  let {privateKey: privateKey} = cmdObj;
+    let {privateKey: privateKey} = cmdObj;
 
-  console.log(JSON.stringify(inspect.privateKeyToPublicKey(privateKey), null, 4));
+    console.log(JSON.stringify(inspect.privateKeyToPublicKey(privateKey), null, 4));
 }

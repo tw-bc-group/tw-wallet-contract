@@ -62,6 +62,10 @@ ${node_path}/bin/quorum -> cli/index.js
 12. inspect, 派生公钥和地址
 ./cli/index.js inspect -k <privateKey> 
 
+13. 读取keystore
+ ./cli/index.js keystore -f /Users/yin/projects/twallet/tw-wallet-contract/jsLibTest/key.json
+
+
 ### 安装 eth-cli
 ```
 $ npm install -g eth-cli

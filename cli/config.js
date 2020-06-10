@@ -9,7 +9,7 @@ module.exports = {
     // fromAddress: "0xed9d02e382b34818e88B88a309c7fe71E65f419d",
     // fromAddressPK:"E6181CAAFFFF94A09D7E332FC8DA9884D99902C7874EB74354BDCADF411929F1",
     // toAddress: "0xcA843569e3427144cEad5e4d5999a3D0cCF92B8e",
-    contractAddress: "0x624d400315312c6280F6dB7683ACf2128EbB9d46",
+    contractAddress: "0x9d13C6D3aFE1721BEef56B55D303B09E021E27ab",
     url: 'http://quorum.tw-wallet.in2e.com:22001',
 
     // my local node
