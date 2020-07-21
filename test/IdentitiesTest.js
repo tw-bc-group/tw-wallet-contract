@@ -1,5 +1,8 @@
 const Identity = artifacts.require("Identities");
 const { expectEvent, BN } = require('@openzeppelin/test-helpers');
+const chai = require('chai');
+chai.use(require('chai-as-promised'));
+chai.should();
 
 contract('Identities', async accounts => {
   let contract;
@@ -27,6 +30,57 @@ contract('Identities', async accounts => {
         extraInfo: extraInfo,
         operator: aliceAddress
       });
+    });
+  });
+
+  describe('#queryIdentities', () => {
+    it('should return empty lists when no identity found', async () => {
+      const result = await contract.identityOf({ from: aliceAddress });
+
+      (0).should.be.equal(result[0].length);
+      (0).should.be.equal(result[1].length);
+      (0).should.be.equal(result[2].length);
+      (0).should.be.equal(result[3].length);
+      (0).should.be.equal(result[4].length);
+    });
+
+    it('should return expected identities when count of identities is not zero', async () => {
+      //given
+      const name = "name";
+      const did = "did";
+      const dappId = "dappId";
+      const index = 0;
+      const extraInfo = "extraInfo";
+      const name2 = "name2";
+      const did2 = "did2";
+      const dappId2 = "dappId2";
+      const index2 = 1;
+      const extraInfo2 = "extraInfo2";
+
+      await contract.registerIdentity(name, did, dappId, index, extraInfo, { from: aliceAddress });
+      await contract.registerIdentity(name2, did2, dappId2, index2, extraInfo2, { from: aliceAddress });
+
+      //when
+      const result = await contract.identityOf({ from: aliceAddress });
+
+      //then
+      (2).should.be.equal(result[0].length);
+      (2).should.be.equal(result[1].length);
+      (2).should.be.equal(result[2].length);
+      (2).should.be.equal(result[3].length);
+      (2).should.be.equal(result[4].length);
+
+      (name).should.be.equal(result[0][0]);
+      (did).should.be.equal(result[1][0]);
+      (dappId).should.be.equal(result[2][0]);
+      (index).should.be.equal(result[3][0].toNumber());
+      (extraInfo).should.be.equal(result[4][0]);
+
+      (name2).should.be.equal(result[0][1]);
+      (did2).should.be.equal(result[1][1]);
+      (dappId2).should.be.equal(result[2][1]);
+      (index2).should.be.equal(result[3][1].toNumber());
+      (extraInfo2).should.be.equal(result[4][1]);
     });
   });
 });

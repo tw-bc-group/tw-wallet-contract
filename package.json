@@ -43,7 +43,9 @@
     "truffle": "^5.1.13",
     "truffle-plugin-verify": "^0.3.9",
     "web3": "^1.2.6",
-    "@openzeppelin/test-helpers": "^0.5.6"
+    "@openzeppelin/test-helpers": "^0.5.6",
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1"
   },
   "license": "ISC",
   "devDependencies": {
