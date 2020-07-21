@@ -61,7 +61,6 @@ module.exports = {
             port: 7545,
             gas: 5500000,
             gasPrice: 20000,
-            from: "0x47187406E7dA648AcF3E6761eFC00660fcd7A0C6",        // Account to send txs from (default: accounts[0])
         },
 
         localQuorum: {
@@ -70,7 +69,6 @@ module.exports = {
             network_id: "*",
             gasPrice: 0,
             gas: 4500000,
-            from: "0x9186eb3d20cbd1f5f992a950d808c4495153abd5",        // Account to send txs from (default: accounts[0])
         },
 
         localQuorumPk: {
@@ -78,7 +76,6 @@ module.exports = {
             gasPrice: 0,
             gas: 4500000,
             provider: () => new HDWalletProvider(mnemonic, `http://127.0.0.1:22003`),
-            from: "0xA97613C3359Cf3E46c93Fd2fCFd1526F2Ab7513B",        // Account to send txs from (default: accounts[0])
         }
 
         // Another network with more advanced options...
