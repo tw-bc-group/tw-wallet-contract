@@ -26,3 +26,7 @@ tw-eth-cli help transfer
 4. 其他命令参考 `tw-eth-cli` 工程
 
 
+### 生成java类型
+
+ web3j truffle generate --javaTypes build/contracts/Identities.json -p com.thoughtworks.wallet.scheduler.eth.strategy -o .
+
