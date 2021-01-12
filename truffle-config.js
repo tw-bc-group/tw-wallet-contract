@@ -42,6 +42,16 @@ module.exports = {
         // tab if you use this network and you must also set the `host`, `port` and `network_id`
         // options below to some value.
         //
+
+        newNode: {
+            network_id: "*",
+            // node{{.}}.quorum.cn.blockchain.thoughtworks.cn
+            host: "node1.quorum.cn.blockchain.thoughtworks.cn",
+            port: 80,
+            gasPrice: 0,
+            gas: 450000000,
+            type: "quorum"
+        },
         devNode1: {
             network_id: "*",
             host: "quorum.tw-wallet.in2e.com",
@@ -58,7 +68,7 @@ module.exports = {
         development: {
             network_id: "*",
             host: "127.0.0.1",
-            port: 7545,
+            port: 8545,
             gas: 5500000,
             gasPrice: 20000,
         },
