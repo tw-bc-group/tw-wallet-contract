@@ -1,0 +1,134 @@
+
+➜  tw-wallet-contract git:(master) truffle migrate --network newNode --reset
+mnemonic : face strategy pottery bottom february draw truck about enrich chunk deposit alley
+
+Compiling your contracts...
+===========================
+> Everything is up to date, there is nothing to compile.
+
+
+
+Starting migrations...
+======================
+> Network name:    'newNode'
+> Network id:      10
+> Block gas limit: 711888405 (0x2a6e8e15)
+
+
+1_initial_migration.js
+======================
+
+   Replacing 'Migrations'
+   ----------------------
+   > transaction hash:    0xc6f1ae95bf05c972d1bce8e117aff4877f7f736f6630de921e9b1ba17a19d3e0
+   > Blocks: 0            Seconds: 0
+   > contract address:    0xd80B848f6FfF93e69De56DFD60601469FF61D9b5
+   > block number:        6815
+   > block timestamp:     0x16596784d9b792ed
+   > account:             0xed9d02e382b34818e88B88a309c7fe71E65f419d
+   > balance:             999868779
+   > gas used:            192121 (0x2ee79)
+   > gas price:           0 gwei
+   > value sent:          0 ETH
+   > total cost:          0 ETH
+
+
+   > Saving migration to chain.
+   > Saving artifacts
+   -------------------------------------
+   > Total cost:                   0 ETH
+
+
+2_deploy_dc_ep_contract.js
+==========================
+
+   Replacing 'DC_EP_ERC20'
+   -----------------------
+   > transaction hash:    0x1a0045ebf68968c6ead8dabfcff878765bb74395d4cb5db098e4a51ce072fe06
+   > Blocks: 0            Seconds: 0
+   > contract address:    0xE4515b368BCd02fCFDFf1509Ab6707090d24ECFb
+   > block number:        6817
+   > block timestamp:     0x165967855b39210f
+   > account:             0xed9d02e382b34818e88B88a309c7fe71E65f419d
+   > balance:             999868779
+   > gas used:            1423191 (0x15b757)
+   > gas price:           0 gwei
+   > value sent:          0 ETH
+   > total cost:          0 ETH
+
+
+   > Saving migration to chain.
+   > Saving artifacts
+   -------------------------------------
+   > Total cost:                   0 ETH
+
+
+3_deploy_identity_registry_contract.js
+======================================
+
+   Replacing 'IdentityRegistry'
+   ----------------------------
+   > transaction hash:    0x67facc929e6e27ae0249b977a79b361c664355bcbc7c9882c71d7c12c71d5a7e
+   > Blocks: 0            Seconds: 0
+   > contract address:    0xB665C7aa1Fed093E5CF5410BF602cdC0562D0137
+   > block number:        6819
+   > block timestamp:     0x16596785d85ca6e6
+   > account:             0xed9d02e382b34818e88B88a309c7fe71E65f419d
+   > balance:             999868779
+   > gas used:            1145473 (0x117a81)
+   > gas price:           0 gwei
+   > value sent:          0 ETH
+   > total cost:          0 ETH
+
+
+   Replacing 'Identities'
+   ----------------------
+   > transaction hash:    0x0f154b36df60d0628c9f5a0afaa13a4595c3f99eacc025c179137d9a86d09b89
+   > Blocks: 0            Seconds: 0
+   > contract address:    0xf763d2F324915c2D7A0306f838D0debe01827ed4
+   > block number:        6820
+   > block timestamp:     0x1659678627774de2
+   > account:             0xed9d02e382b34818e88B88a309c7fe71E65f419d
+   > balance:             999868779
+   > gas used:            1068835 (0x104f23)
+   > gas price:           0 gwei
+   > value sent:          0 ETH
+   > total cost:          0 ETH
+
+
+   > Saving migration to chain.
+   > Saving artifacts
+   -------------------------------------
+   > Total cost:                   0 ETH
+
+
+4_deploy_healthy_verification_claim_contract.js
+===============================================
+
+   Replacing 'HealthVerificationClaim'
+   -----------------------------------
+   > transaction hash:    0xfb1463900d60e719ff164ee74f8051779a7a7ac9f5f067acf26234e44abd5fbd
+   > Blocks: 0            Seconds: 0
+   > contract address:    0xa04842819C33D6b393A8f8A5Fa85b54c3Dff5E51
+   > block number:        6822
+   > block timestamp:     0x16596786b45c3b69
+   > account:             0xed9d02e382b34818e88B88a309c7fe71E65f419d
+   > balance:             999868779
+   > gas used:            1058088 (0x102528)
+   > gas price:           0 gwei
+   > value sent:          0 ETH
+   > total cost:          0 ETH
+
+
+   > Saving migration to chain.
+   > Saving artifacts
+   -------------------------------------
+   > Total cost:                   0 ETH
+
+
+Summary
+=======
+> Total deployments:   5
+> Final cost:          0 ETH
+
+
